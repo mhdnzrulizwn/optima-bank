@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Optima Bank - Dashboard</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="dashboard-body">
+  <div class="dashboard-container">
+    
+    <!-- Header -->
+    <header class="dashboard-header">
+      <div class="header-content">
+        <div class="logo-section">
+          <div class="logo">Optima</div>
+          <span class="logo-sub">bank</span>
+        </div>
+        <nav class="nav-menu">
+          <a href="home.html" class="nav-item active">
+            <i class="fas fa-home"></i> Home
+          </a>
+          <a href="vouchers.html" class="nav-item">
+            <i class="fas fa-gift"></i> Voucher
+          </a>
+        </nav>
+        <div class="header-search">
+          <input type="search" placeholder="Search here ..." id="search-input">
+          <button class="search-btn"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="header-actions">
+          <div class="profile-menu" onclick="location.href='profile.html'">
+            <i class="fas fa-user-circle"></i>
+            <span>Profile</span>
+          </div>
+          <div class="cart-menu" onclick="location.href='cart.html'">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Your Cart</span>
+          </div>
+          <div class="logout-menu" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+      
+      <!-- Welcome Section -->
+      <section class="welcome-section">
+        <div class="welcome-text">
+          <h1>Welcome back, <span id="user-name">User</span>!</h1>
+          <p>Ready to earn and redeem more rewards?</p>
+        </div>
+      </section>
+
+      <!-- Stats Cards -->
+      <section class="stats-section">
+        <div class="stats-grid">
+          <div class="stat-card points-card">
+            <div class="stat-content">
+              <div class="stat-number" id="user-points">0</div>
+              <div class="stat-label">Available Points</div>
+              <div class="stat-info" id="points-info">Start earning points today!</div>
+            </div>
+            <div class="stat-icon">
+              <i class="fas fa-coins"></i>
+            </div>
+          </div>
+          
+          <div class="stat-card tier-card" id="tier-card">
+            <div class="stat-content">
+              <div class="stat-tier" id="user-tier">Bronze Member</div>
+              <div class="stat-label">Current Tier</div>
+              <div class="stat-info" id="tier-benefits">1% points on all purchases</div>
+            </div>
+            <div class="stat-icon">
+              <i class="fas fa-crown"></i>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Latest Rewards -->
+      <section class="rewards-section">
+        <div class="section-header">
+          <h2>Latest Rewards</h2>
+          <a href="vouchers.html" class="view-all-btn">
+            View All Rewards <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+        
+        <div id="voucher-list" class="rewards-grid">
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Voucher Modal -->
+    <div id="voucher-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-modal" onclick="closeVoucherModal()">&times;</span>
+        <div class="modal-header">
+          <img id="modal-img" src="" alt="" class="modal-image"/>
+          <div class="modal-info">
+            <h3 id="modal-title"></h3>
+            <p id="modal-desc"></p>
+            <div class="modal-points">
+              <span id="modal-points"></span> Points
+            </div>
+            <div class="modal-terms">
+              <small id="modal-terms"></small>
+            </div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-primary" id="modal-redeem-btn">
+            <i class="fas fa-gift"></i> Redeem Now
+          </button>
+          <button class="btn btn-secondary" id="modal-cart-btn">
+            <i class="fas fa-cart-plus"></i> Add to Cart
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification hidden">
+      <div class="notification-content">
+        <i class="fas fa-check-circle"></i>
+        <span id="notification-text"></span>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="emergency-chatbot-button" style="
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #1e40af 0%, #f97316 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 9999;
+    font-size: 24px;
+    color: white;
+    transition: transform 0.3s ease;
+" onclick="toggleEmergencyChat()">
+    💬
+</div>
+
+<div id="emergency-chat-window" style="
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 350px;
+    height: 500px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    z-index: 9998;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+">
+    <div style="background: linear-gradient(135deg, #1e40af 0%, #f97316 100%); color: white; padding: 15px; font-weight: bold;">
+        🤖 Optima Support Bot
+        <span onclick="toggleEmergencyChat()" style="float: right; cursor: pointer;">✕</span>
+    </div>
+    <div id="emergency-chat-messages" style="flex: 1; padding: 15px; overflow-y: auto; background: #f8fafc;">
+        <div style="background: black; padding: 10px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            👋 Hello! I'm your Optima Bank support assistant. How can I help you today?
+        </div>
+    </div>
+    <div style="padding: 15px; border-top: 1px solid #e2e8f0;">
+        <input type="text" id="emergency-chat-input" placeholder="Type your message..." style="
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            outline: none;
+        " onkeypress="if(event.key==='Enter') sendEmergencyMessage()">
+        <button onclick="sendEmergencyMessage()" style="
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+            background: linear-gradient(135deg, #1e40af 0%, #f97316 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        ">Send Message</button>
+    </div>
+</div>
+
+<script>
+function toggleEmergencyChat() {
+    const chatWindow = document.getElementById('emergency-chat-window');
+    chatWindow.style.display = chatWindow.style.display === 'none' ? 'flex' : 'none';
+}
+
+function sendEmergencyMessage() {
+    const input = document.getElementById('emergency-chat-input');
+    const messages = document.getElementById('emergency-chat-messages');
+    const message = input.value.trim();
+    
+    if (message) {
+        // Add user message
+        messages.innerHTML += `
+            <div style="text-align: right; margin-bottom: 10px;">
+                <div style="background: #1e40af; color: white; padding: 10px; border-radius: 8px; display: inline-block; max-width: 80%;">
+                    ${message}
+                </div>
+            </div>
+        `;
+        
+        // Add bot response
+        setTimeout(() => {
+            const response = generateEmergencyResponse(message);
+            messages.innerHTML += `
+                <div style="background: black; padding: 10px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    ${response}
+                </div>
+            `;
+            messages.scrollTop = messages.scrollHeight;
+        }, 1000);
+        
+        input.value = '';
+        messages.scrollTop = messages.scrollHeight;
+    }
+}
+
+function generateEmergencyResponse(message) {
+    const lowerMessage = message.toLowerCase();
+    
+    if (lowerMessage.includes('points') || lowerMessage.includes('balance')) {
+        return '🪙 You currently have <strong>650 points</strong> in your account! You can use these to redeem amazing vouchers and rewards.';
+    }
+    
+    if (lowerMessage.includes('voucher') || lowerMessage.includes('reward')) {
+        return '🎁 We have lots of great vouchers available! You can redeem vouchers for food, shopping, entertainment, and transport. Check the vouchers page to see what\'s available!';
+    }
+    
+    if (lowerMessage.includes('tier') || lowerMessage.includes('status')) {
+        return '👑 With 650 points, you are a <strong>Silver Member</strong>! You need 1,351 more points to reach Gold tier.';
+    }
+    
+    if (lowerMessage.includes('help') || lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
+        return '👋 I can help you with:<br>• Checking your points balance<br>• Information about vouchers<br>• Your tier status<br>• Technical support<br><br>What would you like to know?';
+    }
+    
+    return '🤖 Thanks for your message! I can help you with points, vouchers, tier status, and general support. What specific information do you need?';
+}
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
+  <script src="chatbot.js"></script>                
+  <script src="chatbot-integration.js"></script>
+  <script>
+    loadHome();
+
+    setTimeout(function() {
+        if (typeof initializeChatbot === 'function') {
+            initializeChatbot();
+        }
+    }, 1000);
+  </script>
+
+</body>
+</html>

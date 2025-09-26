@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Optima Bank - Profile</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="dashboard-body">
+  <div class="dashboard-container">
+    
+    <!-- Header -->
+    <header class="dashboard-header">
+      <div class="header-content">
+        <div class="logo-section">
+          <div class="logo">Optima</div>
+          <span class="logo-sub">bank</span>
+        </div>
+        <nav class="nav-menu">
+          <a href="home.html" class="nav-item">
+            <i class="fas fa-home"></i> Home
+          </a>
+          <a href="vouchers.html" class="nav-item">
+            <i class="fas fa-gift"></i> Voucher
+          </a>
+        </nav>
+        <div class="header-search">
+          <input type="search" placeholder="Search here ..." disabled>
+          <button class="search-btn" disabled><i class="fas fa-search"></i></button>
+        </div>
+        <div class="header-actions">
+          <div class="profile-menu active">
+            <i class="fas fa-user-circle"></i>
+            <span>Profile</span>
+          </div>
+          <div class="cart-menu" onclick="location.href='cart.html'">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Your Cart</span>
+          </div>
+          <div class="logout-menu" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+      
+      <!-- Profile Header -->
+      <section class="profile-header">
+        <div class="profile-title">
+          <h1><i class="fas fa-user-circle"></i> My Profile</h1>
+          <p>Manage your account information and preferences</p>
+        </div>
+      </section>
+
+      <!-- Profile Content -->
+      <section class="profile-content">
+        
+        <div class="profile-card">
+          <div class="card-header">
+            <h2>Personal Information</h2>
+            <button class="btn btn-secondary" id="edit-btn" onclick="toggleEditMode()">
+              <i class="fas fa-edit"></i> Edit Profile
+            </button>
+          </div>
+          
+          <div id="view-mode" class="profile-form">
+            <div class="form-group">
+              <label><i class="fas fa-envelope"></i> Email Address</label>
+              <div class="info-display" id="profile-email">Loading...</div>
+            </div>
+            
+            <div class="form-group">
+              <label><i class="fas fa-user"></i> Full Name</label>
+              <div class="info-display" id="profile-name">Loading...</div>
+            </div>
+            
+            <div class="form-group">
+              <label><i class="fas fa-calendar"></i> Member Since</label>
+              <div class="info-display" id="profile-created">Loading...</div>
+            </div>
+          </div>
+
+          <div id="edit-mode" class="profile-form" style="display: none;">
+            <div class="form-group">
+              <label><i class="fas fa-envelope"></i> Email Address</label>
+              <div class="info-display" id="profile-email-edit">Loading...</div>
+              <small class="form-note">Email cannot be changed. Contact support if needed.</small>
+            </div>
+            
+            <div class="form-group">
+              <label><i class="fas fa-user"></i> Full Name</label>
+              <input type="text" id="edit-name" placeholder="Enter your full name" />
+            </div>
+            
+            <div class="form-actions">
+              <button class="btn btn-primary" onclick="saveProfile()">
+                <i class="fas fa-save"></i> Save Changes
+              </button>
+              <button class="btn btn-secondary" onclick="cancelEdit()">
+                <i class="fas fa-times"></i> Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Password Change Card -->
+        <div class="profile-card">
+          <div class="card-header">
+            <h2>Security Settings</h2>
+          </div>
+          
+          <div class="profile-form">
+            <div class="form-group">
+              <label><i class="fas fa-lock"></i> Change Password</label>
+              <button class="btn btn-secondary" onclick="togglePasswordChange()">
+                <i class="fas fa-key"></i> Update Password
+              </button>
+            </div>
+            
+            <!-- Password Change Form -->
+            <div id="password-change-form" style="display: none;">
+              <div class="form-group">
+                <label>Current Password</label>
+                <input type="password" id="current-password" placeholder="Enter current password" />
+              </div>
+              
+              <div class="form-group">
+                <label>New Password</label>
+                <input type="password" id="new-password" placeholder="Enter new password" />
+              </div>
+              
+              <div class="form-group">
+                <label>Confirm New Password</label>
+                <input type="password" id="confirm-password" placeholder="Confirm new password" />
+              </div>
+              
+              <div class="form-actions">
+                <button class="btn btn-primary" onclick="changePassword()">
+                  <i class="fas fa-save"></i> Update Password
+                </button>
+                <button class="btn btn-secondary" onclick="cancelPasswordChange()">
+                  <i class="fas fa-times"></i> Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Account Stats Card -->
+        <div class="profile-card">
+          <div class="card-header">
+            <h2>Account Statistics</h2>
+          </div>
+          
+          <div class="stats-grid-profile">
+            <div class="stat-item">
+              <div class="stat-icon-small">
+                <i class="fas fa-coins"></i>
+              </div>
+              <div class="stat-details">
+                <div class="stat-value" id="profile-points">0</div>
+                <div class="stat-label">Total Points</div>
+              </div>
+            </div>
+            
+            <div class="stat-item">
+              <div class="stat-icon-small">
+                <i class="fas fa-crown"></i>
+              </div>
+              <div class="stat-details">
+                <div class="stat-value" id="profile-tier">Bronze</div>
+                <div class="stat-label">Current Tier</div>
+              </div>
+            </div>
+            
+            <div class="stat-item">
+              <div class="stat-icon-small">
+                <i class="fas fa-gift"></i>
+              </div>
+              <div class="stat-details">
+                <div class="stat-value" id="profile-redemptions">0</div>
+                <div class="stat-label">Vouchers Redeemed</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- Notification -->
+    <div id="notification" class="notification hidden">
+      <div class="notification-content">
+        <i class="fas fa-check-circle"></i>
+        <span id="notification-text"></span>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
+  <script src="chatbot.js"></script>                
+  <script src="chatbot-integration.js"></script>
+  <script>
+    loadProfile();
+     
+    setTimeout(function() {
+        if (typeof initializeChatbot === 'function') {
+            initializeChatbot();
+        }
+    }, 1000);
+  </script>
+</body>
+</html>

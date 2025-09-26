@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optima Bank Loyalty Chatbot</title>
+    <link rel="stylesheet" href="chatbot.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Floating Chat Button -->
+    <div class="chat-button" id="chatButton">
+        <i class="fas fa-comments"></i>
+        <span class="notification-badge" id="notificationBadge" style="display: none;">1</span>
+    </div>
+
+    <!-- Chat Container -->
+    <div class="chat-container" id="chatContainer" style="display: none;">
+        <!-- Chat Header -->
+        <div class="chat-header">
+            <div class="chat-header-content">
+                <div class="agent-info">
+                    <div class="agent-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="agent-details">
+                        <h4>Optima Assistant</h4>
+                        <span class="status online">Online</span>
+                    </div>
+                </div>
+                <div class="chat-controls">
+                    <button class="control-btn" id="minimizeBtn" title="Minimize">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button class="control-btn" id="closeBtn" title="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Messages Area -->
+        <div class="chat-messages" id="chatMessages">
+            <!-- Welcome Message -->
+            <div class="message bot-message">
+                <div class="message-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="message-content">
+                    <div class="message-bubble">
+                        <p>Welcome to Optima Bank! I'm your loyalty program assistant. How can I help you today?</p>
+                    </div>
+                    <div class="message-time">Just now</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions" id="quickActions">
+            <button class="quick-action-btn" data-action="check-points">
+                <i class="fas fa-star"></i>
+                Check Points
+            </button>
+            <button class="quick-action-btn" data-action="vouchers">
+                <i class="fas fa-gift"></i>
+                Vouchers
+            </button>
+            <button class="quick-action-btn" data-action="tier-status">
+                <i class="fas fa-crown"></i>
+                Tier Status
+            </button>
+            <button class="quick-action-btn" data-action="support">
+                <i class="fas fa-headset"></i>
+                Support
+            </button>
+        </div>
+
+        <!-- Typing Indicator -->
+        <div class="typing-indicator" id="typingIndicator" style="display: none;">
+            <div class="message bot-message">
+                <div class="message-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="message-content">
+                    <div class="message-bubble typing">
+                        <div class="typing-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Input Area -->
+        <div class="chat-input-area">
+            <div class="attachment-menu" id="attachmentMenu" style="display: none;">
+                <button class="attachment-option" data-type="account">
+                    <i class="fas fa-user"></i>
+                    Account Info
+                </button>
+                <button class="attachment-option" data-type="transaction">
+                    <i class="fas fa-receipt"></i>
+                    Transaction History
+                </button>
+                <button class="attachment-option" data-type="feedback">
+                    <i class="fas fa-comment"></i>
+                    Send Feedback
+                </button>
+            </div>
+
+            <div class="input-container">
+                <button class="attachment-btn" id="attachmentBtn" title="More Options">
+                    <i class="fas fa-paperclip"></i>
+                </button>
+                <div class="input-wrapper">
+                    <textarea 
+                        id="messageInput" 
+                        placeholder="Type your message..." 
+                        rows="1"
+                        maxlength="500"
+                    ></textarea>
+                    <div class="input-counter" id="inputCounter">0/500</div>
+                </div>
+                <button class="send-btn" id="sendBtn" title="Send Message">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Footer -->
+        <div class="chat-footer">
+            <div class="footer-links">
+                <a href="#" class="footer-link" data-action="privacy">Privacy Policy</a>
+                <a href="#" class="footer-link" data-action="terms">Terms of Service</a>
+                <a href="#" class="footer-link" data-action="human-agent">Talk to Human Agent</a>
+            </div>
+            <div class="powered-by">
+                Powered by Optima Bank AI
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="notification-toast" id="notificationToast" style="display: none;">
+        <div class="toast-content">
+            <i class="fas fa-bell"></i>
+            <span class="toast-message">New message from Optima Assistant</span>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="chatbot.js"></script>
+    <script src="chatbot-integration.js"></script>
+
+    <script>
+        // Initialize chatbot when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof OptimaChatbot !== 'undefined') {
+                window.chatbot = new OptimaChatbot({
+                    container: 'chatContainer',
+                    button: 'chatButton',
+                    supabaseUrl: window.supabaseConfig?.url || '',
+                    supabaseAnonKey: window.supabaseConfig?.anonKey || '',
+                    debug: true
+                });
+            }
+        });
+    </script>
+</body>
+</html>

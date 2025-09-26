@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Optima Bank - Cart</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="dashboard-body">
+  <div class="dashboard-container">
+    
+    <!-- Header -->
+    <header class="dashboard-header">
+      <div class="header-content">
+        <div class="logo-section">
+          <div class="logo">Optima</div>
+          <span class="logo-sub">bank</span>
+        </div>
+        <nav class="nav-menu">
+          <a href="home.html" class="nav-item">
+            <i class="fas fa-home"></i> Home
+          </a>
+          <a href="vouchers.html" class="nav-item">
+            <i class="fas fa-gift"></i> Voucher
+          </a>
+          <a href="cart.html" class="nav-item active">
+            <i class="fas fa-shopping-cart"></i> Cart
+          </a>
+        </nav>
+        <div class="header-search">
+          <input type="search" placeholder="Search..." id="search-input">
+          <button class="search-btn"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="header-actions">
+          <div class="profile-menu" onclick="location.href='profile.html'">
+            <i class="fas fa-user-circle"></i>
+            <span>Profile</span>
+          </div>
+          <div class="cart-menu" onclick="location.href='cart.html'">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Your Cart</span>
+            <span class="cart-count" id="cart-count">0</span>
+          </div>
+          <div class="logout-menu" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+      
+      <!-- Page Header -->
+      <section class="page-header">
+        <div class="page-title">
+          <h1><i class="fas fa-shopping-cart"></i> Shopping Cart</h1>
+          <p>Review your selected vouchers before redeeming</p>
+        </div>
+        <div class="user-points-display">
+          <div class="points-badge">
+            <i class="fas fa-coins"></i>
+            <span id="user-points-header">0</span> Points
+          </div>
+        </div>
+      </section>
+
+      <div class="cart-container">
+        
+        <!-- Cart Items Section -->
+        <section class="cart-items-section">
+          <div class="cart-header">
+            <h2><i class="fas fa-list"></i> Cart Items</h2>
+            <button class="btn btn-outline btn-sm" onclick="clearCart()" id="clear-cart-btn" style="display: none;">
+              <i class="fas fa-trash"></i> Clear Cart
+            </button>
+          </div>
+          
+          <div id="cart-items" class="cart-items">
+            <div class="loading-spinner">
+              <i class="fas fa-spinner fa-spin"></i>
+              <p>Loading cart items...</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Cart Summary Section -->
+        <aside class="cart-summary-section">
+          <div class="cart-summary">
+            <h3><i class="fas fa-receipt"></i> Order Summary</h3>
+            
+            <div class="summary-row">
+              <span>Items in cart:</span>
+              <span id="total-items">0</span>
+            </div>
+            
+            <div class="summary-row">
+              <span>Total vouchers:</span>
+              <span id="total-vouchers">0</span>
+            </div>
+            
+            <div class="summary-row">
+              <span>Total points required:</span>
+              <span id="total-points">0</span>
+            </div>
+            
+            <div class="summary-row">
+              <span>Your current points:</span>
+              <span id="current-points">0</span>
+            </div>
+            
+            <hr class="summary-divider">
+            
+            <div class="summary-row summary-balance" id="points-balance">
+              <span>Points after redemption:</span>
+              <span id="remaining-points">0</span>
+            </div>
+            
+            <div class="cart-actions">
+              <button class="btn btn-primary btn-full" onclick="redeemAllItems()" id="redeem-all-btn" disabled>
+                <i class="fas fa-gift"></i> Redeem All Items
+              </button>
+              
+              <button class="btn btn-secondary btn-full" onclick="location.href='vouchers.html'">
+                <i class="fas fa-plus"></i> Continue Shopping
+              </button>
+            </div>
+            
+            <div class="points-notice" id="insufficient-points-notice" style="display: none;">
+              <i class="fas fa-exclamation-triangle"></i>
+              <span>You don't have enough points for all items</span>
+            </div>
+          </div>
+        </aside>
+        
+      </div>
+
+    </main>
+
+    <!-- Quantity Modal -->
+    <div id="quantity-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-modal" onclick="closeQuantityModal()">&times;</span>
+        
+        <div class="modal-header">
+          <h3><i class="fas fa-edit"></i> Edit Quantity</h3>
+        </div>
+        
+        <div class="modal-body">
+          <div class="voucher-preview">
+            <img id="quantity-modal-img" src="" alt="" class="quantity-modal-image"/>
+            <div class="voucher-info">
+              <h4 id="quantity-modal-title"></h4>
+              <p id="quantity-modal-desc"></p>
+              <div class="voucher-points">
+                <i class="fas fa-coins"></i>
+                <span id="quantity-modal-points"></span> Points each
+              </div>
+            </div>
+          </div>
+          
+          <div class="quantity-controls">
+            <label for="quantity-input">Quantity:</label>
+            <div class="quantity-selector">
+              <button class="quantity-btn" onclick="decreaseQuantity()">
+                <i class="fas fa-minus"></i>
+              </button>
+              <input type="number" id="quantity-input" min="1" max="10" value="1" onchange="validateQuantity()">
+              <button class="quantity-btn" onclick="increaseQuantity()">
+                <i class="fas fa-plus"></i>
+              </button>
+            </div>
+            <small class="quantity-note">Maximum 10 vouchers per item</small>
+          </div>
+          
+          <div class="quantity-summary">
+            <div class="summary-item">
+              <span>Quantity:</span>
+              <span id="quantity-display">1</span>
+            </div>
+            <div class="summary-item">
+              <span>Points per voucher:</span>
+              <span id="points-per-voucher">0</span>
+            </div>
+            <div class="summary-item total-row">
+              <span><strong>Total Points:</strong></span>
+              <span id="total-points-for-item"><strong>0</strong></span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-actions">
+          <button class="btn btn-primary" id="update-quantity-btn" onclick="updateQuantity()">
+            <i class="fas fa-check"></i> Update Quantity
+          </button>
+          <button class="btn btn-secondary" onclick="closeQuantityModal()">
+            <i class="fas fa-times"></i> Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="redeem-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-modal" onclick="closeRedeemModal()">&times;</span>
+        
+        <div class="modal-header">
+          <h3><i class="fas fa-gift"></i> Confirm Redemption</h3>
+        </div>
+        
+        <div class="modal-body">
+          <p>Are you sure you want to redeem all items in your cart?</p>
+          
+          <div class="redemption-summary">
+            <div class="summary-item">
+              <strong>Unique items: <span id="modal-items-count">0</span></strong>
+            </div>
+            <div class="summary-item">
+              <strong>Total vouchers: <span id="modal-vouchers-count">0</span></strong>
+            </div>
+            <div class="summary-item">
+              <strong>Total points required: <span id="modal-points-required">0</span></strong>
+            </div>
+            <div class="summary-item">
+              <strong>Points remaining: <span id="modal-points-remaining">0</span></strong>
+            </div>
+          </div>
+          
+          <div class="modal-warning">
+            <i class="fas fa-info-circle"></i>
+            <span>This action cannot be undone. Vouchers will be added to your account and PDFs will be generated for download.</span>
+          </div>
+        </div>
+        
+        <div class="modal-actions">
+          <button class="btn btn-primary" onclick="confirmRedeemAll()">
+            <i class="fas fa-check"></i> Confirm Redemption
+          </button>
+          <button class="btn btn-secondary" onclick="closeRedeemModal()">
+            <i class="fas fa-times"></i> Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Download Modal -->
+    <div id="download-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-modal" onclick="closeDownloadModal()">&times;</span>
+        
+        <div class="modal-header">
+          <h3><i class="fas fa-download"></i> Download Vouchers</h3>
+        </div>
+        
+        <div class="modal-body">
+          <div class="download-success">
+            <i class="fas fa-check-circle"></i>
+            <h4>Redemption Successful!</h4>
+            <p>Your vouchers have been redeemed successfully. Download your voucher PDFs below:</p>
+          </div>
+          
+          <div id="download-list" class="download-list">
+          </div>
+          
+          <div class="download-actions">
+            <button class="btn btn-primary btn-full" onclick="downloadAllPDFs()" id="download-all-btn">
+              <i class="fas fa-download"></i> Download All PDFs
+            </button>
+          </div>
+        </div>
+        
+        <div class="modal-actions">
+          <button class="btn btn-secondary" onclick="closeDownloadModal()">
+            <i class="fas fa-times"></i> Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification hidden">
+      <div class="notification-content">
+        <i class="fas fa-check-circle"></i>
+        <span id="notification-text"></span>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="app.js"></script>
+  <script src="chatbot.js"></script>                
+  <script src="chatbot-integration.js"></script>
+  <script>
+    // Load cart page
+    loadCartPage();
+
+    setTimeout(function() {
+        if (typeof initializeChatbot === 'function') {
+            initializeChatbot();
+        }
+    }, 1000);
+  </script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Optima Bank - Vouchers</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="dashboard-body">
+  <div class="dashboard-container">
+    
+    <!-- Header -->
+    <header class="dashboard-header">
+      <div class="header-content">
+        <div class="logo-section">
+          <div class="logo">Optima</div>
+          <span class="logo-sub">bank</span>
+        </div>
+        <nav class="nav-menu">
+          <a href="home.html" class="nav-item">
+            <i class="fas fa-home"></i> Home
+          </a>
+          <a href="vouchers.html" class="nav-item active">
+            <i class="fas fa-gift"></i> Voucher
+          </a>
+        </nav>
+        <div class="header-search">
+          <input type="search" placeholder="Search vouchers..." id="search-input">
+          <button class="search-btn" onclick="searchVouchers()"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="header-actions">
+          <div class="profile-menu" onclick="location.href='profile.html'">
+            <i class="fas fa-user-circle"></i>
+            <span>Profile</span>
+          </div>
+          <div class="cart-menu" onclick="location.href='cart.html'">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Your Cart</span>
+            <span class="cart-count" id="cart-count">0</span>
+          </div>
+          <div class="logout-menu" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+      
+      <!-- Page Header -->
+      <section class="page-header">
+        <div class="page-title">
+          <h1><i class="fas fa-gift"></i> Vouchers & Rewards</h1>
+          <p>Redeem your points for amazing rewards and exclusive offers</p>
+        </div>
+        <div class="user-points-display">
+          <div class="points-badge">
+            <i class="fas fa-coins"></i>
+            <span id="user-points-header">0</span> Points
+          </div>
+        </div>
+      </section>
+
+      <!-- Filters Section -->
+      <section class="filters-section">
+        <div class="filter-container">
+          <div class="filter-group">
+            <label class="filter-label">
+              <i class="fas fa-filter"></i> Filter by Category:
+            </label>
+            <div class="category-filters">
+              <button class="filter-btn active" onclick="filterByCategory('all')" data-category="all">
+                <i class="fas fa-th"></i> All
+              </button>
+              <button class="filter-btn" onclick="filterByCategory('food')" data-category="food">
+                <i class="fas fa-utensils"></i> Food & Beverage
+              </button>
+              <button class="filter-btn" onclick="filterByCategory('shopping')" data-category="shopping">
+                <i class="fas fa-shopping-bag"></i> Shopping
+              </button>
+              <button class="filter-btn" onclick="filterByCategory('entertainment')" data-category="entertainment">
+                <i class="fas fa-film"></i> Entertainment
+              </button>
+              <button class="filter-btn" onclick="filterByCategory('transport')" data-category="transport">
+                <i class="fas fa-car"></i> Transport
+              </button>
+            </div>
+          </div>
+          
+          <div class="filter-group">
+            <label class="filter-label">
+              <i class="fas fa-sort"></i> Sort by:
+            </label>
+            <select class="sort-select" id="sort-select" onchange="sortVouchers()">
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="points-low">Points: Low to High</option>
+              <option value="points-high">Points: High to Low</option>
+              <option value="name-az">Name: A-Z</option>
+              <option value="name-za">Name: Z-A</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- Results Info -->
+      <section class="results-info">
+        <div class="results-count">
+          <span id="results-count">Loading...</span>
+        </div>
+        <div class="view-toggle">
+          <button class="view-btn active" onclick="setViewMode('grid')" data-view="grid">
+            <i class="fas fa-th-large"></i>
+          </button>
+          <button class="view-btn" onclick="setViewMode('list')" data-view="list">
+            <i class="fas fa-list"></i>
+          </button>
+        </div>
+      </section>
+
+      <!-- Vouchers Grid -->
+      <section class="vouchers-section">
+        <div id="voucher-list" class="vouchers-grid">
+          <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading vouchers...</p>
+          </div>
+        </div>
+        
+        <div class="load-more-container" id="load-more-container" style="display: none;">
+          <button class="btn btn-secondary" onclick="loadMoreVouchers()">
+            <i class="fas fa-plus"></i> Load More Vouchers
+          </button>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Voucher Modal -->
+    <div id="voucher-modal" class="modal">
+      <div class="modal-content voucher-modal-content">
+        <span class="close-modal" onclick="closeVoucherModal()">&times;</span>
+        
+        <div class="modal-header">
+          <img id="modal-img" src="" alt="" class="modal-image"/>
+          <div class="modal-info">
+            <h3 id="modal-title"></h3>
+            <div class="modal-category">
+              <i class="fas fa-tag"></i>
+              <span id="modal-category"></span>
+            </div>
+            <p id="modal-desc"></p>
+            <div class="modal-points">
+              <i class="fas fa-coins"></i>
+              <span id="modal-points"></span> Points
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-body">
+          <div class="modal-terms">
+            <h4><i class="fas fa-info-circle"></i> Terms & Conditions</h4>
+            <p id="modal-terms">Loading terms...</p>
+          </div>
+          
+          <div class="modal-validity" id="modal-validity-section">
+            <h4><i class="fas fa-calendar-alt"></i> Validity</h4>
+            <p id="modal-validity">Valid until: <span id="modal-valid-until"></span></p>
+          </div>
+        </div>
+        
+        <div class="modal-actions">
+          <button class="btn btn-primary" id="modal-redeem-btn">
+            <i class="fas fa-gift"></i> Redeem Now
+          </button>
+          <button class="btn btn-secondary" id="modal-cart-btn">
+            <i class="fas fa-cart-plus"></i> Add to Cart
+          </button>
+          <button class="btn btn-outline" onclick="shareVoucher()">
+            <i class="fas fa-share"></i> Share
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Add to Cart Toast -->
+    <div id="cart-toast" class="cart-toast hidden">
+      <div class="toast-content">
+        <i class="fas fa-check-circle"></i>
+        <span>Added to cart!</span>
+        <button onclick="location.href='cart.html'" class="toast-btn">
+          View Cart
+        </button>
+      </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification hidden">
+      <div class="notification-content">
+        <i class="fas fa-check-circle"></i>
+        <span id="notification-text"></span>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
+  <script>
+    // Load vouchers page
+    loadVouchersPage();
+  </script>
+</body>
+</html>
